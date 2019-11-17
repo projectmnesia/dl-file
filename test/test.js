@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { createHash } = require('crypto');
 const fs = require('fs-extra');
-const fetch = require('../lib/index');
+const dlFile = require('../lib/index');
 
 const url = 'http://ipv4.download.thinkbroadband.com/1MB.zip';
 const headers = { 'user-agent': 'request' };
@@ -25,7 +25,7 @@ function checkFileMD5(filename, expectedHash) {
   })
 }
 
-describe('fetch', function() {
+describe('dl-file', function() {
   it('should successfully download file', function() {
 
     const filename = `1MB-test-${Math.floor(Math.random() * 100000)}.zip`;
@@ -38,7 +38,7 @@ describe('fetch', function() {
 
     const opts = { url, headers };
 
-    return fetch(opts, filename)
+    return dlFile(opts, filename)
       .then(filename => checkFileMD5(filename, expectedHash))
   });
 
@@ -53,7 +53,7 @@ describe('fetch', function() {
     })
 
     return fs.copy('test/1MB-partial.zip', filename)
-      .then(() => fetch({ url, headers }, filename))
+      .then(() => dlFile({ url, headers }, filename))
       .then(filename => checkFileMD5(filename, expectedHash));
   })
 });
